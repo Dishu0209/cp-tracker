@@ -1,4 +1,4 @@
- const { fetchUserInfo } = require("../services/codeforcesServices");
+ const { fetchUserInfo, fetchRatingHistory,fetchSubmission } = require("../services/codeforcesServices");
 const getUser= async(req,res)=>{
     try{
     const handle=req.params.handle;
@@ -37,4 +37,81 @@ catch(error)
     });
 }
 };
-module.exports={getUser,};
+const getRatingHistory = async (req, res) => {
+     try{
+    const handle=req.params.handle;
+    const data=await fetchRatingHistory(handle);
+    
+    if(data.status==="OK")
+   { console.log (data);
+    const ratinghistory=data.result.map((contest)=>{
+        return {
+            name:contest.contestName,
+            rank:contest.rank,
+            time:contest.ratingUpdateTimeSeconds,
+            oldRating:contest.oldRating,
+            newRating:contest.newRating
+
+        }
+    });
+    return res.status(200).json({success:true,
+        data:ratinghistory});}
+    else
+    {
+        return res.status(404).json({
+            success:false,
+            message:"USER NOT FOUND"
+        });
+    }
+}
+catch(error)
+{
+    return res.status(500).json({
+        success:false,
+        message:"Internal Server Error"
+    })
+}
+
+};
+const getSubmission=async(req,res)=>{
+    try
+{const handle=req.params.handle;
+const data=await fetchSubmission(handle);
+if(data.status!=="OK")
+{
+    return res.status(404).json({
+        success:false,
+        message:"USER NOT FOUND"
+    });
+}
+else
+    {
+        const submissions = data.result.map((submission) => {
+    return {
+        id: submission.id,
+        time: submission.creationTimeSeconds,
+        contestId: submission.problem.contestId,
+        index: submission.problem.index,
+        name: submission.problem.name,
+        rating: submission.problem.rating,
+        tags: submission.problem.tags,
+        language: submission.programmingLanguage,
+        verdict: submission.verdict,
+        participantType: submission.author.participantType
+    };
+});
+
+return res.status(200).json({
+    success: true,
+    data: submissions
+});
+    }}
+    catch(error)
+    {
+        return res.status(500).json({
+            success:false,
+            message:"Internal Server Error"
+        })
+    }
+};
+module.exports={getUser,getRatingHistory,getSubmission};
