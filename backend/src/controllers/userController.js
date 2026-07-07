@@ -3,6 +3,7 @@ const {
   fetchRatingHistory,
   fetchSubmission,
 } = require("../services/codeforcesServices");
+const User=require("../models/User");
 const getUser = async (req, res) => {
   try {
     const handle = req.params.handle;
@@ -160,4 +161,51 @@ Object.fromEntries(tagDistribution);
     });
   }
 };
-module.exports = { getUser, getRatingHistory, getSubmission, getanalytics };
+const addCodeforcesHandle=async(req,res)=>{
+  try{
+    const {handle,isOwn}=req.body;
+    if(!handle)
+    {
+      return res.status(400).json({
+        success:false,
+        message:"Handle Is Required"
+      });
+    }
+    const data=await fetchUserInfo(handle);
+     if (data.status !== "OK") {
+      return res.status(404).json({
+        success: false,
+        message: "NO USER FOUND",
+      });
+    }
+    const user=await User.findById(req.userId);
+    const alreadyExists = user.codeforcesHandles.some(
+  (item) => item.handle.toLowerCase() === handle.toLowerCase()
+);
+if (alreadyExists) {
+  return res.status(409).json({
+    success: false,
+    message: "HANDLE ALREADY ADDED",
+  });
+}
+user.codeforcesHandles.push({
+  handle: handle,
+  isOwn: isOwn,
+});
+await user.save();
+return res.status(200).json({
+  success: true,
+  message: "CODEFORCES HANDLE ADDED SUCCESSFULLY",
+  codeforcesHandles: user.codeforcesHandles,
+});
+  }
+  catch(error)
+  {
+    console.error(error);
+    return res.status(500).json({
+      success:false,
+      message:"Internal Server Error"
+    });
+  }
+};
+module.exports = { getUser, getRatingHistory, getSubmission, getanalytics,addCodeforcesHandle };

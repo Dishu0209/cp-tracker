@@ -85,4 +85,33 @@ const login = async (req, res) => {
     });
   }
 };
-module.exports = { signup,login };
+const getMe=async (req,res)=>
+{
+   try {
+    const user = await User.findById(req.userId);
+      if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "USER NOT FOUND",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+      },
+    });
+    // ab response return karna hai
+  } catch (error) {
+ console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+module.exports = { signup,login,getMe};
