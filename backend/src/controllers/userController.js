@@ -142,8 +142,6 @@ const getanalytics = async (req, res) => {
         (tagDistribution.get(tag) || 0) + 1
     );
 }
-Object.fromEntries(ratingDistribution);
-Object.fromEntries(tagDistribution);
       }
       return res.status(200).json({
         success:true,
@@ -208,4 +206,104 @@ return res.status(200).json({
     });
   }
 };
-module.exports = { getUser, getRatingHistory, getSubmission, getanalytics,addCodeforcesHandle };
+const getCodeforcesHandles=async(req,res)=>{
+  try{
+    const user=await User.findById(req.userId);
+    if(!user)
+    {
+      return res.status(404).json({
+        success:false,
+        message:"User Not Found"
+      });
+    }
+    return res.status(200).json({
+      success:true,
+      codeforcesHandles:user.codeforcesHandles,
+      message:"Successfully got the handles"
+    });
+  }
+  catch(error)
+  {
+    console.error(error);
+    return res.status(500).json({
+      success:false,
+      message:"Internal Server Error"
+    });
+  }
+};
+const deleteCodeforcesHandle=async(req,res)=>{
+  try{
+    const user=await User.findById(req.userId);
+    if(!user)
+    {
+      return res.status(404).json({
+        success:false,
+        message:"User Not Found"
+      });
+    }
+    const handleId=req.params.handleId;
+    const size=user.codeforcesHandles.length;
+    user.codeforcesHandles=user.codeforcesHandles.filter((item)=>{
+     return item._id.toString()!==handleId;
+    });
+    if(size===user.codeforcesHandles.length)
+    {
+      return res.status(404).json({
+        success:false,
+        message:"ID NOT FOUND"
+      });
+    }
+    await user.save();
+    return res.status(200).json(
+      {
+        success:true,
+        message:"Handle Deleted Successfully"
+      }
+    );
+  }
+  catch(error)
+  {
+    console.error(error);
+    return res.status(500).json({
+      success:false,
+      message:"Internal Server Error"
+    });
+  }
+};
+const updateCodeforcesHandle=async(req,res)=>{
+  try{
+    const user=await User.findById(req.userId);
+    if(!user)
+    {
+       return res.status(404).json({
+        success:false,
+        message:"User Not Found"
+      });
+    }
+    const handleId=req.params.handleId;
+    const handle=user.codeforcesHandles.find((item)=>item._id.toString()===handleId);
+    if (!handle) {
+  return res.status(404).json({
+    success: false,
+    message: "Handle Not Found",
+  });
+}
+
+handle.isOwn = !handle.isOwn;
+
+await user.save();
+return res.status(200).json({
+  success:true,
+  message:"Handle Updated Successfully"
+});
+  }
+  catch (error)
+  {
+     console.error(error);
+    return res.status(500).json({
+      success:false,
+      message:"Internal Server Error"
+    });
+  }
+};
+module.exports = { getUser, getRatingHistory, getSubmission, getanalytics,addCodeforcesHandle,getCodeforcesHandles,deleteCodeforcesHandle,updateCodeforcesHandle };
