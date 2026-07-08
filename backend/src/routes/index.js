@@ -1,6 +1,6 @@
 const express=require("express");
 const { getHealth } = require("../controllers/healthController");
-const { getUser, getRatingHistory, getSubmission, getanalytics, addCodeforcesHandle, getCodeforcesHandles, deleteCodeforcesHandle, updateCodeforcesHandle } = require("../controllers/userController");
+const { getUser, getRatingHistory, getSubmission, getanalytics, addCodeforcesHandle, getCodeforcesHandles, deleteCodeforcesHandle, updateCodeforcesHandle, getDashboard, getDashboardDetails } = require("../controllers/userController");
 const { signup, login,getMe } = require("../controllers/authController");
 const authmiddleware = require("../middlewares/authMiddleware");
 const router=express.Router();
@@ -20,4 +20,6 @@ router.post(
 router.get("/users/me/codeforces-handles",authmiddleware,getCodeforcesHandles);
 router.delete("/users/me/codeforces-handles/:handleId",authmiddleware,deleteCodeforcesHandle);
 router.patch("/users/me/codeforces-handles/:handleId",authmiddleware,updateCodeforcesHandle);
+router.get("/users/me/dashboard",authmiddleware,getDashboard);
+router.get("/users/me/dashboard/:handle",authmiddleware,getDashboardDetails);
 module.exports=router;
