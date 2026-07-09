@@ -3,10 +3,10 @@ const authmiddleware=async (req,res,next)=>{
     try
     {
         const authHeader = req.headers.authorization;
-        if (!authHeader) {
+        if (!authHeader||  !authHeader.startsWith("Bearer ")) {
   return res.status(401).json({
     success: false,
-    message: "TOKEN NOT FOUND",
+    message: "Token not found",
   });
 }
         const token = authHeader.split(" ")[1];//1 iss liye kyuki vo ek array return karega aur authorisataion wala kuch ayise dikhta hai "Bearer eyJhbGciOiJIUzI1NiIs..." toh vo aisa ho jayehga ["Bearer", "eyJhbGciOiJIUzI1NiIs..."]
@@ -18,7 +18,7 @@ const authmiddleware=async (req,res,next)=>{
     {
   return res.status(401).json({
       success: false,
-      message: "INVALID OR EXPIRED TOKEN",
+      message: "Invalid or expired token",
     });
     }
 };

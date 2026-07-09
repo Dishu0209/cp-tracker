@@ -3,8 +3,7 @@ const {
   fetchRatingHistory,
   fetchSubmission,
 } = require("../services/codeforcesServices");
-const User = require("../models/User");
-const calculateAnalytics=require("../utils/calculateAnalytics");
+const calculateAnalytics = require("../utils/calculateAnalytics");
 const getUser = async (req, res) => {
   try {
     const handle = req.params.handle;
@@ -14,11 +13,10 @@ const getUser = async (req, res) => {
     if (data.status !== "OK") {
       return res.status(404).json({
         success: false,
-        message: "NO USER FOUND",
+        message: "User not found",
       });
     }
     const user = data.result[0];
-    console.log(data);
 
     res.status(200).json({
       success: true,
@@ -45,8 +43,7 @@ const getRatingHistory = async (req, res) => {
     const data = await fetchRatingHistory(handle);
 
     if (data.status === "OK") {
-      console.log(data);
-      const ratinghistory = data.result.map((contest) => {
+      const ratingHistory = data.result.map((contest) => {
         return {
           name: contest.contestName,
           rank: contest.rank,
@@ -55,14 +52,15 @@ const getRatingHistory = async (req, res) => {
           newRating: contest.newRating,
         };
       });
-      return res.status(200).json({ success: true, data: ratinghistory });
+      return res.status(200).json({ success: true, data: ratingHistory });
     } else {
       return res.status(404).json({
         success: false,
-        message: "USER NOT FOUND",
+        message: "User not found",
       });
     }
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -76,7 +74,7 @@ const getSubmission = async (req, res) => {
     if (data.status !== "OK") {
       return res.status(404).json({
         success: false,
-        message: "USER NOT FOUND",
+        message: "User not found",
       });
     } else {
       const submissions = data.result.map((submission) => {
@@ -100,26 +98,27 @@ const getSubmission = async (req, res) => {
       });
     }
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
     });
   }
 };
-const getanalytics = async (req, res) => {
+const getAnalytics = async (req, res) => {
   try {
     const handle = req.params.handle;
     const data = await fetchSubmission(handle);
     if (data.status !== "OK") {
       return res.status(404).json({
         success: false,
-        message: "USER NOT FOUND",
+        message: "User not found",
       });
     } else {
       const analytics = calculateAnalytics(data.result);
       return res.status(200).json({
         success: true,
-       ...analytics
+        ...analytics,
       });
     }
   } catch (error) {
@@ -134,4 +133,5 @@ module.exports = {
   getUser,
   getRatingHistory,
   getSubmission,
-  getanalytics,};
+  getAnalytics,
+};

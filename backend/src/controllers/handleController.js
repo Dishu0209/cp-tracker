@@ -1,8 +1,4 @@
-const {
-  fetchUserInfo,
-  fetchRatingHistory,
-  fetchSubmission,
-} = require("../services/codeforcesServices");
+const { fetchUserInfo } = require("../services/codeforcesServices");
 const User = require("../models/User");
 const addCodeforcesHandle = async (req, res) => {
   try {
@@ -10,24 +6,30 @@ const addCodeforcesHandle = async (req, res) => {
     if (!handle) {
       return res.status(400).json({
         success: false,
-        message: "Handle Is Required",
+        message: "Handle is required",
       });
     }
     const data = await fetchUserInfo(handle);
     if (data.status !== "OK") {
       return res.status(404).json({
         success: false,
-        message: "NO USER FOUND",
+        message: "User not found",
       });
     }
     const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
     const alreadyExists = user.codeforcesHandles.some(
       (item) => item.handle.toLowerCase() === handle.toLowerCase(),
     );
     if (alreadyExists) {
       return res.status(409).json({
         success: false,
-        message: "HANDLE ALREADY ADDED",
+        message: "Handle already added",
       });
     }
     user.codeforcesHandles.push({
@@ -37,7 +39,7 @@ const addCodeforcesHandle = async (req, res) => {
     await user.save();
     return res.status(200).json({
       success: true,
-      message: "CODEFORCES HANDLE ADDED SUCCESSFULLY",
+      message: "Codeforces handle added successfully",
       codeforcesHandles: user.codeforcesHandles,
     });
   } catch (error) {
@@ -54,7 +56,7 @@ const getCodeforcesHandles = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User Not Found",
+        message: "User not found",
       });
     }
     return res.status(200).json({
@@ -76,7 +78,7 @@ const deleteCodeforcesHandle = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User Not Found",
+        message: "User not found",
       });
     }
     const handleId = req.params.handleId;
@@ -87,13 +89,13 @@ const deleteCodeforcesHandle = async (req, res) => {
     if (size === user.codeforcesHandles.length) {
       return res.status(404).json({
         success: false,
-        message: "ID NOT FOUND",
+        message: "Handle not found",
       });
     }
     await user.save();
     return res.status(200).json({
       success: true,
-      message: "Handle Deleted Successfully",
+      message: "Handle deleted successfully",
     });
   } catch (error) {
     console.error(error);
@@ -109,7 +111,7 @@ const updateCodeforcesHandle = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User Not Found",
+        message: "User not found",
       });
     }
     const handleId = req.params.handleId;
@@ -119,7 +121,7 @@ const updateCodeforcesHandle = async (req, res) => {
     if (!handle) {
       return res.status(404).json({
         success: false,
-        message: "Handle Not Found",
+        message: "Handle not found",
       });
     }
 
@@ -128,7 +130,7 @@ const updateCodeforcesHandle = async (req, res) => {
     await user.save();
     return res.status(200).json({
       success: true,
-      message: "Handle Updated Successfully",
+      message: "Handle updated successfully",
     });
   } catch (error) {
     console.error(error);
@@ -138,4 +140,9 @@ const updateCodeforcesHandle = async (req, res) => {
     });
   }
 };
-module.exports={addCodeforcesHandle,getCodeforcesHandles,updateCodeforcesHandle,deleteCodeforcesHandle};
+module.exports = {
+  addCodeforcesHandle,
+  getCodeforcesHandles,
+  updateCodeforcesHandle,
+  deleteCodeforcesHandle,
+};

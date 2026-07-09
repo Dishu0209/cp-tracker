@@ -1,6 +1,6 @@
 const express=require("express");
 const { getHealth } = require("../controllers/healthController");
-const {getUser,getRatingHistory,getSubmission, getanalytics,} = require("../controllers/codeforcesController");
+const {getUser,getRatingHistory,getSubmission, getAnalytics,} = require("../controllers/codeforcesController");
 const { signup, login,getMe } = require("../controllers/authController");
 const authmiddleware = require("../middlewares/authMiddleware");
 const { getCodeforcesHandles, updateCodeforcesHandle, deleteCodeforcesHandle, addCodeforcesHandle } = require("../controllers/handleController");
@@ -11,7 +11,7 @@ router.get("/",getHealth);
 router.get("/codeforces/users/:handle",getUser);
 router.get("/codeforces/users/:handle/rating",getRatingHistory);
 router.get("/codeforces/users/:handle/submission",getSubmission);
-router.get("/codeforces/users/:handle/analytics",getanalytics);
+router.get("/codeforces/users/:handle/analytics",getAnalytics);
 router.post("/auth/signup",signup);
 router.post("/auth/login",login);
 router.get("/auth/me",authmiddleware,getMe);

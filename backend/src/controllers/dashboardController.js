@@ -11,26 +11,28 @@ const getDashboard = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User Not Found",
+        message: "User not found",
       });
     }
     if (user.codeforcesHandles.length === 0) {
       return res.status(200).json({
         success: true,
         message: "No handles found. Please add a handle.",
-        codeforcesHandles: [],
+        dashboardData: [],
       });
     }
     const dashboardData = [];
-    for (const item of user.codeforcesHandles) {
-      const data = await fetchUserInfo(item.handle);
-      if (data.status !== "OK") {
+    const results = await Promise.all(
+      user.codeforcesHandles.map((item) => fetchUserInfo(item.handle)),
+    );
+    for (let i = 0; i < results.length; i++) {
+      if (results[i].status !== "OK") {
         continue;
       }
-      const cfUser = data.result[0];
+      const cfUser = results[i].result[0];
       dashboardData.push({
         handle: cfUser.handle,
-        isOwn: item.isOwn,
+        isOwn: user.codeforcesHandles[i].isOwn,
         rating: cfUser.rating,
         maxRating: cfUser.maxRating,
         rank: cfUser.rank,
@@ -40,7 +42,7 @@ const getDashboard = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message: "Dashboard Data Fetched Successfully",
+      message: "Dashboard data fetched successfully",
       dashboardData,
     });
   } catch (error) {
@@ -57,7 +59,7 @@ const getDashboardDetails = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User Not Found",
+        message: "User not found",
       });
     }
     const handle = req.params.handle;
@@ -70,63 +72,65 @@ const getDashboardDetails = async (req, res) => {
         message: "Handle not added",
       });
     }
-    const userInfoData = await fetchUserInfo(handle);
-const ratingData = await fetchRatingHistory(handle);
-const submissionData = await fetchSubmission(handle);
-if (
-  userInfoData.status !== "OK" ||
-  ratingData.status !== "OK" ||
-  submissionData.status !== "OK"
-) {
-  return res.status(502).json({
-    success: false,
-    message: "Failed to fetch Codeforces data",
-  });
-}
-const cfUser = userInfoData.result[0];
-const profile = {
-  handle: cfUser.handle,
-  rating: cfUser.rating,
-  maxRating: cfUser.maxRating,
-  rank: cfUser.rank,
-  maxRank: cfUser.maxRank,
-  avatar: cfUser.avatar,
-  organization: cfUser.organization,
-};
-const ratingHistory = ratingData.result.map((contest) => {
-  return {
-    name: contest.contestName,
-    rank: contest.rank,
-    time: contest.ratingUpdateTimeSeconds,
-    oldRating: contest.oldRating,
-    newRating: contest.newRating,
-  };
-});
- const analytics = calculateAnalytics(submissionData.result);
-      const recentSubmissions = submissionData.result
-  .slice(0, 10)
-  .map((submission) => {
-    return {
-      id: submission.id,
-      time: submission.creationTimeSeconds,
-      contestId: submission.problem.contestId,
-      index: submission.problem.index,
-      name: submission.problem.name,
-      rating: submission.problem.rating,
-      verdict: submission.verdict,
-      language: submission.programmingLanguage,
+    const [userInfoData, ratingData, submissionData] = await Promise.all([
+      fetchUserInfo(handle),
+      fetchRatingHistory(handle),
+      fetchSubmission(handle),
+    ]);
+    if (
+      userInfoData.status !== "OK" ||
+      ratingData.status !== "OK" ||
+      submissionData.status !== "OK"
+    ) {
+      return res.status(502).json({
+        success: false,
+        message: "Failed to fetch Codeforces data",
+      });
+    }
+    const cfUser = userInfoData.result[0];
+    const profile = {
+      handle: cfUser.handle,
+      rating: cfUser.rating,
+      maxRating: cfUser.maxRating,
+      rank: cfUser.rank,
+      maxRank: cfUser.maxRank,
+      avatar: cfUser.avatar,
+      organization: cfUser.organization,
     };
-  });
-  return res.status(200).json({
-  success: true,
-  message: "Dashboard Details Fetched Successfully",
-  data: {
-    profile,
-    analytics,
-    ratingHistory,
-    recentSubmissions,
-  },
-});
+    const ratingHistory = ratingData.result.map((contest) => {
+      return {
+        name: contest.contestName,
+        rank: contest.rank,
+        time: contest.ratingUpdateTimeSeconds,
+        oldRating: contest.oldRating,
+        newRating: contest.newRating,
+      };
+    });
+    const analytics = calculateAnalytics(submissionData.result);
+    const recentSubmissions = submissionData.result
+      .slice(0, 10)
+      .map((submission) => {
+        return {
+          id: submission.id,
+          time: submission.creationTimeSeconds,
+          contestId: submission.problem.contestId,
+          index: submission.problem.index,
+          name: submission.problem.name,
+          rating: submission.problem.rating,
+          verdict: submission.verdict,
+          language: submission.programmingLanguage,
+        };
+      });
+    return res.status(200).json({
+      success: true,
+      message: "Dashboard details fetched successfully",
+      data: {
+        profile,
+        analytics,
+        ratingHistory,
+        recentSubmissions,
+      },
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -136,5 +140,6 @@ const ratingHistory = ratingData.result.map((contest) => {
   }
 };
 module.exports = {
-  getDashboard,getDashboardDetails
+  getDashboard,
+  getDashboardDetails,
 };
