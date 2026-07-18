@@ -16,4 +16,13 @@ export const signupUser=async(name,username,email,password)=>{
   });
   return response.data;
 };
+export const getMe=async()=>{
+  const token=localStorage.getItem("token");
+  const response=await API.get("/auth/me",{
+    headers:{
+       Authorization: `Bearer ${token}`,
+    }
+  });
+  return response.data;
+};
 
