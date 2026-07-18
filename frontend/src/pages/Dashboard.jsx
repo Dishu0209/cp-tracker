@@ -11,6 +11,7 @@ import {
 import HandleSelector from "../components/HandleSelector";
 import ProfileCard from "../components/ProfileCard";
 import RatingChart from "../components/RatingChart";
+import RatingDistributionChart from "../components/RatingDistributionChart";
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [handles, setHandles] = useState([]);
@@ -98,6 +99,11 @@ function Dashboard() {
         {dashboardDetails && <ProfileCard profile={dashboardDetails.profile} />}
         {dashboardDetails && (
           <RatingChart ratingHistory={dashboardDetails.ratingHistory} />
+        )}
+        {dashboardDetails && (
+          <RatingDistributionChart
+            distribution={dashboardDetails.analytics.ratingDistribution}
+          />
         )}
         <div className="mt-8">
           <RecentActivity
