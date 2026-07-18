@@ -1,25 +1,35 @@
 function RecentActivity({ submissions }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-      <h2 className="mb-4 text-xl font-bold text-white">
-        Recent Activity
-      </h2>
+    <div className="group mt-8 overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-xl transition-all duration-300 hover:border-indigo-500/40 hover:shadow-[0_0_35px_rgba(99,102,241,0.15)]">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-white">
+          Recent Activity
+        </h2>
+
+        <p className="mt-1 text-sm text-slate-400">
+          Your latest Codeforces submissions.
+        </p>
+      </div>
 
       {submissions.length === 0 ? (
-        <p className="text-slate-400">No activity yet.</p>
+        <div className="rounded-2xl border border-dashed border-slate-700 py-10 text-center">
+          <p className="text-slate-400">
+            No recent submissions found.
+          </p>
+        </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {submissions.map((submission) => (
             <div
               key={submission.id}
-              className="flex items-center justify-between rounded-lg bg-slate-800 p-4"
+              className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-800/60 p-4 transition-all duration-300 hover:border-indigo-500/30 hover:bg-slate-800"
             >
-              <div>
-                <p className="font-semibold text-white">
+              <div className="min-w-0">
+                <p className="truncate text-lg font-semibold text-white">
                   {submission.name}
                 </p>
 
-                <p className="text-sm text-slate-400">
+                <p className="mt-1 text-sm text-slate-400">
                   {submission.language}
                   {submission.rating
                     ? ` • ${submission.rating}`
@@ -28,13 +38,15 @@ function RecentActivity({ submissions }) {
               </div>
 
               <span
-                className={`rounded-full px-3 py-1 text-sm font-medium ${
+                className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
                   submission.verdict === "OK"
-                    ? "bg-green-600 text-white"
-                    : "bg-red-600 text-white"
+                    ? "border border-green-500/30 bg-green-500/10 text-green-400"
+                    : "border border-red-500/30 bg-red-500/10 text-red-400"
                 }`}
               >
-                {submission.verdict}
+                {submission.verdict === "OK"
+                  ? "Accepted"
+                  : submission.verdict}
               </span>
             </div>
           ))}

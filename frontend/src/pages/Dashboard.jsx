@@ -1,23 +1,29 @@
+import { useEffect, useState } from "react";
+
 import Navbar from "../components/Navbar";
 import WelcomeBanner from "../components/WelcomeBanner";
+import HandleSelector from "../components/HandleSelector";
 import StatCard from "../components/StatCard";
+import ProfileCard from "../components/ProfileCard";
+import RatingChart from "../components/RatingChart";
+import RatingDistributionChart from "../components/RatingDistributionChart";
+import TagDistribution from "../components/TagDistribution";
 import RecentActivity from "../components/RecentActivity";
-import { useState, useEffect } from "react";
+
 import { getMe } from "../services/authService";
 import {
   getDashboard,
   getDashboardDetails,
 } from "../services/dashboardService";
-import HandleSelector from "../components/HandleSelector";
-import ProfileCard from "../components/ProfileCard";
-import RatingChart from "../components/RatingChart";
-import RatingDistributionChart from "../components/RatingDistributionChart";
-import TagDistribution from "../components/TagDistribution";
+import DashboardSkeleton from "../components/DashboardSkeleton";
+
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [handles, setHandles] = useState([]);
   const [selectedHandle, setSelectedHandle] = useState(null);
   const [dashboardDetails, setDashboardDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // Fetch Logged In User
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -30,6 +36,8 @@ function Dashboard() {
 
     fetchUser();
   }, []);
+
+  // Fetch Dashboard Handles
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
@@ -46,31 +54,45 @@ function Dashboard() {
         console.error(error);
       }
     };
+
     fetchDashboard();
   }, []);
+
+  // Fetch Selected Handle Details
   useEffect(() => {
-    if (!selectedHandle) return;
+    if (!selectedHandle) {
+      setLoading(false);
+      return;
+    }
 
     const fetchDashboardDetails = async () => {
       try {
+        setLoading(true);
         const data = await getDashboardDetails(selectedHandle.handle);
-        console.log(data);
+
         setDashboardDetails(data.data);
+        setLoading(false);
       } catch (error) {
+        setLoading(false);
         console.error(error);
       }
     };
 
     fetchDashboardDetails();
   }, [selectedHandle]);
-  useEffect(() => {
-    console.log(dashboardDetails);
-  }, [dashboardDetails]);
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <DashboardSkeleton />
+      </>
+    );
+  }
   return (
     <div className="min-h-screen bg-slate-950">
       <Navbar />
 
-      <div className="mx-auto max-w-7xl p-6">
+      <div className="mx-auto max-w-7xl px-6 py-8">
         <WelcomeBanner user={user} />
 
         <HandleSelector
@@ -79,43 +101,72 @@ function Dashboard() {
           setSelectedHandle={setSelectedHandle}
         />
 
-        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-          <StatCard
-            title="Total Solved"
-            value={dashboardDetails?.analytics?.uniqueSolvedProblems || 0}
-          />
+        {handles.length === 0 ? (
+          <div className="mt-8 rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 py-20 text-center">
+            <h2 className="text-2xl font-bold text-white">
+              No Codeforces Handle Found
+            </h2>
 
-          <StatCard
-            title="Max Rating"
-            value={dashboardDetails?.profile?.maxRating || 0}
-          />
+            <p className="mt-3 text-slate-400">
+              Add your first Codeforces handle to begin tracking your
+              competitive programming journey.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Stat Cards */}
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+              <StatCard
+                title="Solved Problems"
+                value={dashboardDetails?.analytics?.uniqueSolvedProblems || 0}
+              />
 
-          <StatCard
-            title="Total Contests"
-            value={dashboardDetails?.ratingHistory?.length || 0}
-          />
+              <StatCard
+                title="Current Rating"
+                value={dashboardDetails?.profile?.rating || "Unrated"}
+              />
 
-          <StatCard title="Handles" value={handles.length} />
-        </div>
-        {dashboardDetails && <ProfileCard profile={dashboardDetails.profile} />}
-        {dashboardDetails && (
-          <RatingChart ratingHistory={dashboardDetails.ratingHistory} />
+              <StatCard
+                title="Max Rating"
+                value={dashboardDetails?.profile?.maxRating || 0}
+              />
+
+              <StatCard
+                title="Contests"
+                value={dashboardDetails?.ratingHistory?.length || 0}
+              />
+            </div>
+
+            {/* Profile */}
+            {dashboardDetails && (
+              <ProfileCard profile={dashboardDetails.profile} />
+            )}
+
+            {/* Charts */}
+            {dashboardDetails && (
+              <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-2">
+                <RatingChart ratingHistory={dashboardDetails.ratingHistory} />
+
+                <RatingDistributionChart
+                  distribution={dashboardDetails.analytics.ratingDistribution}
+                />
+              </div>
+            )}
+
+            {/* Tags + Recent */}
+            {dashboardDetails && (
+              <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-2">
+                <TagDistribution
+                  distribution={dashboardDetails.analytics.tagDistribution}
+                />
+
+                <RecentActivity
+                  submissions={dashboardDetails.recentSubmissions || []}
+                />
+              </div>
+            )}
+          </>
         )}
-        {dashboardDetails && (
-          <RatingDistributionChart
-            distribution={dashboardDetails.analytics.ratingDistribution}
-          />
-        )}
-       {dashboardDetails && (
-  <TagDistribution
-    distribution={dashboardDetails.analytics.tagDistribution}
-  />
-)}
-        <div className="mt-8">
-          <RecentActivity
-            submissions={dashboardDetails?.recentSubmissions || []}
-          />
-        </div>
       </div>
     </div>
   );
