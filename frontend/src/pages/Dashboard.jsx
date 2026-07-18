@@ -12,6 +12,7 @@ import HandleSelector from "../components/HandleSelector";
 import ProfileCard from "../components/ProfileCard";
 import RatingChart from "../components/RatingChart";
 import RatingDistributionChart from "../components/RatingDistributionChart";
+import TagDistribution from "../components/TagDistribution";
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [handles, setHandles] = useState([]);
@@ -105,6 +106,11 @@ function Dashboard() {
             distribution={dashboardDetails.analytics.ratingDistribution}
           />
         )}
+       {dashboardDetails && (
+  <TagDistribution
+    distribution={dashboardDetails.analytics.tagDistribution}
+  />
+)}
         <div className="mt-8">
           <RecentActivity
             submissions={dashboardDetails?.recentSubmissions || []}
