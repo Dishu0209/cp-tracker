@@ -10,6 +10,7 @@ import {
 } from "../services/dashboardService";
 import HandleSelector from "../components/HandleSelector";
 import ProfileCard from "../components/ProfileCard";
+import RatingChart from "../components/RatingChart";
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [handles, setHandles] = useState([]);
@@ -94,13 +95,14 @@ function Dashboard() {
 
           <StatCard title="Handles" value={handles.length} />
         </div>
+        {dashboardDetails && <ProfileCard profile={dashboardDetails.profile} />}
         {dashboardDetails && (
-  <ProfileCard profile={dashboardDetails.profile} />
-)}
+          <RatingChart ratingHistory={dashboardDetails.ratingHistory} />
+        )}
         <div className="mt-8">
           <RecentActivity
-  submissions={dashboardDetails?.recentSubmissions || []}
-/>
+            submissions={dashboardDetails?.recentSubmissions || []}
+          />
         </div>
       </div>
     </div>
