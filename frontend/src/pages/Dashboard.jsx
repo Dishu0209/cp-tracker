@@ -9,6 +9,7 @@ import {
   getDashboardDetails,
 } from "../services/dashboardService";
 import HandleSelector from "../components/HandleSelector";
+import ProfileCard from "../components/ProfileCard";
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [handles, setHandles] = useState([]);
@@ -93,7 +94,9 @@ function Dashboard() {
 
           <StatCard title="Handles" value={handles.length} />
         </div>
-
+        {dashboardDetails && (
+  <ProfileCard profile={dashboardDetails.profile} />
+)}
         <div className="mt-8">
           <RecentActivity />
         </div>
