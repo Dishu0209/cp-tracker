@@ -98,7 +98,9 @@ function Dashboard() {
   <ProfileCard profile={dashboardDetails.profile} />
 )}
         <div className="mt-8">
-          <RecentActivity />
+          <RecentActivity
+  submissions={dashboardDetails?.recentSubmissions || []}
+/>
         </div>
       </div>
     </div>
