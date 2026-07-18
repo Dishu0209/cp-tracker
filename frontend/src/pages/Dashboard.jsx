@@ -8,6 +8,7 @@ import {
   getDashboard,
   getDashboardDetails,
 } from "../services/dashboardService";
+import HandleSelector from "../components/HandleSelector";
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [handles, setHandles] = useState([]);
@@ -67,6 +68,12 @@ function Dashboard() {
 
       <div className="mx-auto max-w-7xl p-6">
         <WelcomeBanner user={user} />
+
+        <HandleSelector
+          handles={handles}
+          selectedHandle={selectedHandle}
+          setSelectedHandle={setSelectedHandle}
+        />
 
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
           <StatCard
