@@ -13,7 +13,7 @@ function SkeletonChart() {
     <div className="animate-pulse rounded-3xl border border-slate-800 bg-slate-900 p-6">
       <div className="h-6 w-44 rounded bg-slate-700"></div>
 
-      <div className="mt-6 h-[320px] rounded-xl bg-slate-800"></div>
+      <div className="mt-6 h-80 rounded-xl bg-slate-800"></div>
     </div>
   );
 }

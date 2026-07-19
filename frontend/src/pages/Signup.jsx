@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 import { signupUser } from "../services/authService";
 
 function Signup() {
@@ -17,19 +19,22 @@ function Signup() {
     try {
       setLoading(true);
 
-      const data = await signupUser(
+      await signupUser(
         name,
         username,
         email,
         password
       );
 
-      console.log(data);
+      toast.success("Account Created Successfully!");
 
       navigate("/login");
     } catch (error) {
       console.log(error);
-      // Later we'll replace this with toast.error()
+
+      toast.error(
+        error.response?.data?.message || "Signup Failed"
+      );
     } finally {
       setLoading(false);
     }
@@ -46,7 +51,7 @@ function Signup() {
       <div className="relative z-10 w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl backdrop-blur-xl">
         {/* Heading */}
         <h1 className="text-center text-4xl font-extrabold">
-          <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
             Create Account
           </span>
         </h1>
@@ -91,7 +96,7 @@ function Signup() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-2xl bg-gradient-to-r from-indigo-600 to-cyan-500 py-3 font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-2xl bg-linear-to-r from-indigo-600 to-cyan-500 py-3 font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? "Creating Account..." : "Create Account"}
           </button>

@@ -9,13 +9,13 @@ import RatingChart from "../components/RatingChart";
 import RatingDistributionChart from "../components/RatingDistributionChart";
 import TagDistribution from "../components/TagDistribution";
 import RecentActivity from "../components/RecentActivity";
+import DashboardSkeleton from "../components/DashboardSkeleton";
 
 import { getMe } from "../services/authService";
 import {
   getDashboard,
   getDashboardDetails,
 } from "../services/dashboardService";
-import DashboardSkeleton from "../components/DashboardSkeleton";
 
 function Dashboard() {
   const [user, setUser] = useState(null);
@@ -23,6 +23,7 @@ function Dashboard() {
   const [selectedHandle, setSelectedHandle] = useState(null);
   const [dashboardDetails, setDashboardDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+
   // Fetch Logged In User
   useEffect(() => {
     const fetchUser = async () => {
@@ -68,18 +69,20 @@ function Dashboard() {
     const fetchDashboardDetails = async () => {
       try {
         setLoading(true);
+
         const data = await getDashboardDetails(selectedHandle.handle);
 
         setDashboardDetails(data.data);
-        setLoading(false);
       } catch (error) {
-        setLoading(false);
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDashboardDetails();
   }, [selectedHandle]);
+
   if (loading) {
     return (
       <>
@@ -88,6 +91,7 @@ function Dashboard() {
       </>
     );
   }
+
   return (
     <div className="min-h-screen bg-slate-950">
       <Navbar />
@@ -142,24 +146,50 @@ function Dashboard() {
               <ProfileCard profile={dashboardDetails.profile} />
             )}
 
-            {/* Charts */}
+            {/* Performance Analytics */}
             {dashboardDetails && (
-              <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-2">
-                <RatingChart ratingHistory={dashboardDetails.ratingHistory} />
+              <>
+                <div className="mt-10 mb-4">
+                  <h2 className="text-2xl font-bold text-white">
+                    Performance Analytics
+                  </h2>
+                  <p className="text-slate-400">
+                    Rating trends and performance distribution.
+                  </p>
+                </div>
 
-                <RatingDistributionChart
-                  distribution={dashboardDetails.analytics.ratingDistribution}
-                />
-              </div>
+                <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
+                  <RatingChart ratingHistory={dashboardDetails.ratingHistory} />
+
+                  <RatingDistributionChart
+                    distribution={dashboardDetails.analytics.ratingDistribution}
+                  />
+                </div>
+              </>
             )}
 
-            {/* Tags + Recent */}
+            {/* Programming Insights */}
             {dashboardDetails && (
-              <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-2">
+              <>
+                <div className="mt-10 mb-4">
+                  <h2 className="text-2xl font-bold text-white">
+                    Programming Insights
+                  </h2>
+                  <p className="text-slate-400">
+                    Most solved problem tags from your submissions.
+                  </p>
+                </div>
+
                 <TagDistribution
                   distribution={dashboardDetails.analytics.tagDistribution}
                 />
+              </>
+            )}
 
+            {/* Recent Activity */}
+            {/* Recent Activity */}
+            {dashboardDetails && (
+              <div className="mt-10">
                 <RecentActivity
                   submissions={dashboardDetails.recentSubmissions || []}
                 />

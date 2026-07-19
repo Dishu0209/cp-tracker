@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 import { loginUser } from "../services/authService";
 
 function Login() {
@@ -19,10 +21,15 @@ function Login() {
 
       localStorage.setItem("token", data.token);
 
+      toast.success("Login Successful!");
+
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
-      // Later we'll replace this with toast.error()
+
+      toast.error(
+        error.response?.data?.message || "Login Failed"
+      );
     } finally {
       setLoading(false);
     }
@@ -39,7 +46,7 @@ function Login() {
       <div className="relative z-10 w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/90 p-8 shadow-2xl backdrop-blur-xl">
         {/* Heading */}
         <h1 className="text-center text-4xl font-extrabold">
-          <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
             CP Tracker
           </span>
         </h1>
@@ -68,7 +75,7 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-2xl bg-gradient-to-r from-indigo-600 to-cyan-500 py-3 font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-2xl bg-linear-to-r from-indigo-600 to-cyan-500 py-3 font-semibold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
