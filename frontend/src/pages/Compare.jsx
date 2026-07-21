@@ -6,7 +6,6 @@ import ComparePerformanceChart from "../components/ComparePerformanceChart";
 import CompareTagChart from "../components/CompareTagChart";
 import CompareWinnerCards from "../components/CompareWinnerCards";
 import CompareRatingDistributionChart from "../components/CompareRatingDistributionChart";
-import CompareTable from "../components/CompareTable";
 function Compare() {
   const [comparisonData, setComparisonData] = useState([]);
 
@@ -43,12 +42,14 @@ function Compare() {
           <div className="mt-10">
             {/* Comparison cards will come here */}
             <CompareWinnerCards comparisonData={comparisonData} />
-            <CompareTable comparisonData={comparisonData} />
+     
+            <CompareStatsCards comparisonData={comparisonData} />
             <ComparePerformanceChart comparisonData={comparisonData} />
 
             <CompareRatingDistributionChart comparisonData={comparisonData} />
 
             <CompareTagChart comparisonData={comparisonData} />
+                  
           </div>
         )}
       </div>

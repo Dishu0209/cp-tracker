@@ -10,7 +10,7 @@ import RatingDistributionChart from "../components/RatingDistributionChart";
 import TagDistribution from "../components/TagDistribution";
 import RecentActivity from "../components/RecentActivity";
 import DashboardSkeleton from "../components/DashboardSkeleton";
-
+import ManageHandles from "../components/ManageHandles";
 import { getMe } from "../services/authService";
 import {
   getDashboard,
@@ -39,25 +39,31 @@ function Dashboard() {
   }, []);
 
   // Fetch Dashboard Handles
-  useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        const data = await getDashboard();
+ const fetchDashboard = async () => {
+  try {
+    const data = await getDashboard();
 
-        setHandles(data.dashboardData);
+    setHandles(data.dashboardData);
 
-        const ownHandle = data.dashboardData.find((item) => item.isOwn);
+    const ownHandle = data.dashboardData.find(
+      (item) => item.isOwn
+    );
 
-        if (data.dashboardData.length > 0) {
-          setSelectedHandle(ownHandle || data.dashboardData[0]);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    if (data.dashboardData.length > 0) {
+      setSelectedHandle(
+        ownHandle || data.dashboardData[0]
+      );
+    } else {
+      setSelectedHandle(null);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-    fetchDashboard();
-  }, []);
+useEffect(() => {
+  fetchDashboard();
+}, []);
 
   // Fetch Selected Handle Details
   useEffect(() => {
@@ -104,7 +110,13 @@ function Dashboard() {
           selectedHandle={selectedHandle}
           setSelectedHandle={setSelectedHandle}
         />
-
+        <ManageHandles
+          handles={handles}
+          setHandles={setHandles}
+          selectedHandle={selectedHandle}
+          setSelectedHandle={setSelectedHandle}
+          refreshDashboard={fetchDashboard}
+        />
         {handles.length === 0 ? (
           <div className="mt-8 rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 py-20 text-center">
             <h2 className="text-2xl font-bold text-white">

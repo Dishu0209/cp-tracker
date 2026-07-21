@@ -1,25 +1,21 @@
-import { useEffect, useState } from "react";
-import { getDashboard, compareHandles } from "../services/dashboardService";
+import { useEffect, useMemo, useState } from "react";
+import {
+  getDashboard,
+  compareHandles,
+} from "../services/dashboardService";
+
 function CompareHandleSelector({ onCompare }) {
   const [handles, setHandles] = useState([]);
-  const [handle1, setHandle1] = useState("");
-  const [handle2, setHandle2] = useState("");
-  const [handle3, setHandle3] = useState("");
-  const handleCompare = async () => {
-  try {
-    const selectedHandles = [handle1, handle2];
 
-    if (handle3) {
-      selectedHandles.push(handle3);
-    }
+  const [selectedHandles, setSelectedHandles] = useState([
+    "",
+    "",
+  ]);
 
-    const data = await compareHandles(selectedHandles);
+  const [visibleSelectors, setVisibleSelectors] = useState(2);
 
-    onCompare(data.comparisonData);
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchHandles = async () => {
       try {
@@ -33,64 +29,135 @@ function CompareHandleSelector({ onCompare }) {
     fetchHandles();
   }, []);
 
+  const updateHandle = (index, value) => {
+    const updated = [...selectedHandles];
+    updated[index] = value;
+    setSelectedHandles(updated);
+  };
+
+  const addSelector = () => {
+    if (visibleSelectors >= 5) return;
+
+    setVisibleSelectors((prev) => prev + 1);
+
+    setSelectedHandles((prev) => [...prev, ""]);
+  };
+
+  const handleCompare = async () => {
+    const filteredHandles = selectedHandles.filter(
+      (item) => item !== ""
+    );
+
+    if (filteredHandles.length < 2) {
+      alert("Please select at least 2 handles.");
+      return;
+    }
+
+    const unique = new Set(
+      filteredHandles.map((item) => item.toLowerCase())
+    );
+
+    if (unique.size !== filteredHandles.length) {
+      alert("Duplicate handles are not allowed.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const data = await compareHandles(filteredHandles);
+
+      onCompare(data.comparisonData);
+    } catch (error) {
+      alert(
+        error?.response?.data?.message ||
+          "Comparison failed."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getDisabled = (currentIndex) => {
+    return selectedHandles.filter(
+      (_, index) => index !== currentIndex
+    );
+  };
   return (
-    <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
-      <h2 className="text-2xl font-bold text-white">Compare Handles</h2>
+  <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
 
-      <p className="mt-2 text-slate-400">
-        Select up to three saved Codeforces handles to compare.
-      </p>
+    <h2 className="text-2xl font-bold text-white">
+      Compare Handles
+    </h2>
 
-      <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
-        <select value={handle1}
-        onChange={(e)=>setHandle1(e.target.value)}
-            className="rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-white outline-none transition focus:border-indigo-500">
-          <option value="">Select Handle 1</option>
+    <p className="mt-2 text-slate-400">
+      Compare between <span className="font-semibold text-indigo-400">2 and 5</span> saved Codeforces handles.
+    </p>
 
-          {handles.map((item) => (
-            <option key={item.handle} value={item.handle}>
-              {item.handle}
+    <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2">
+
+      {selectedHandles
+        .slice(0, visibleSelectors)
+        .map((selected, index) => (
+
+          <select
+            key={index}
+            value={selected}
+            onChange={(e) =>
+              updateHandle(index, e.target.value)
+            }
+            className="rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-white outline-none transition focus:border-indigo-500"
+          >
+            <option value="">
+             {index < 2
+  ? `Required Handle ${index + 1}`
+  : `Optional Handle ${index + 1}`}
             </option>
-          ))}
-        </select>
 
-        <select 
-        value={handle2}
-        onChange={(e)=>{setHandle2(e.target.value)}}
-        className="rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-white outline-none transition focus:border-indigo-500">
-          <option value="">Select Handle 2</option>
+            {handles.map((item) => (
+              <option
+                key={item.handle}
+                value={item.handle}
+                disabled={getDisabled(index).includes(
+                  item.handle
+                )}
+              >
+                {item.handle}
+              </option>
+            ))}
 
-          {handles.map((item) => (
-            <option key={item.handle} value={item.handle}>
-              {item.handle}
-            </option>
-          ))}
-        </select>
+          </select>
 
-        <select
-        value={handle3}
-        onChange={(e)=>{setHandle3(e.target.value())}}
-         className="rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-white outline-none transition focus:border-indigo-500">
-          <option value="">Optional Handle 3</option>
+      ))}
+          </div>
 
-          {handles.map((item) => (
-            <option key={item.handle} value={item.handle}>
-              {item.handle}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="mt-8 flex justify-center">
-        <button 
-        onClick={handleCompare}
-        disabled={!handle1||!handle2}
-        className="w-48 rounded-2xl bg-indigo-600 px-8 py-3 font-semibold text-white transition hover:bg-indigo-500">
-          Compare
+    {visibleSelectors < 5 && (
+      <div className="mt-6 flex justify-center">
+        <button
+          type="button"
+          onClick={addSelector}
+          className="rounded-xl border border-indigo-500 px-5 py-2 font-medium text-indigo-400 transition hover:bg-indigo-500 hover:text-white"
+        >
+          + Add Another Handle
         </button>
       </div>
+    )}
+
+    <div className="mt-8 flex justify-center">
+      <button
+        onClick={handleCompare}
+        disabled={
+          loading ||
+          !selectedHandles[0] ||
+          !selectedHandles[1]
+        }
+        className="w-52 rounded-2xl bg-indigo-600 px-8 py-3 font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {loading ? "Comparing..." : "Compare"}
+      </button>
     </div>
-  );
+  </div>
+);
 }
 
 export default CompareHandleSelector;
