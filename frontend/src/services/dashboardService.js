@@ -17,3 +17,18 @@ export const getDashboardDetails = async (handle) => {
   });
   return response.data;
 };
+export const compareHandles = async (handles) => {
+  const token = localStorage.getItem("token");
+
+  const response = await API.post(
+    "/users/me/compare",
+    { handles },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data;
+};
