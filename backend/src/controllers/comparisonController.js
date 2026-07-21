@@ -21,10 +21,10 @@ const compareHandles = async (req, res) => {
       });
     }
 
-    if (handles.length > 3) {
+    if (handles.length > 5) {
       return res
         .status(400)
-        .json({ success: false, message: "You can compare at most 3 handles" });
+        .json({ success: false, message: "You can compare at most 5 handles" });
     }
     if (handles.length < 2) {
       return res

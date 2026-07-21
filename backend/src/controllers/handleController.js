@@ -34,7 +34,7 @@ const addCodeforcesHandle = async (req, res) => {
     }
     user.codeforcesHandles.push({
       handle: handle,
-      isOwn: isOwn,
+      isOwn: Boolean(isOwn),
     });
     await user.save();
     return res.status(200).json({
@@ -96,6 +96,7 @@ const deleteCodeforcesHandle = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Handle deleted successfully",
+       codeforcesHandles: user.codeforcesHandles,
     });
   } catch (error) {
     console.error(error);
@@ -131,6 +132,7 @@ const updateCodeforcesHandle = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Handle updated successfully",
+       codeforcesHandles: user.codeforcesHandles,
     });
   } catch (error) {
     console.error(error);

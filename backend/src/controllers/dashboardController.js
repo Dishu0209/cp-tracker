@@ -30,15 +30,16 @@ const getDashboard = async (req, res) => {
         continue;
       }
       const cfUser = results[i].result[0];
-      dashboardData.push({
-        handle: cfUser.handle,
-        isOwn: user.codeforcesHandles[i].isOwn,
-        rating: cfUser.rating,
-        maxRating: cfUser.maxRating,
-        rank: cfUser.rank,
-        maxRank: cfUser.maxRank,
-        avatar: cfUser.avatar,
-      });
+     dashboardData.push({
+  _id: user.codeforcesHandles[i]._id,
+  handle: cfUser.handle,
+  isOwn: user.codeforcesHandles[i].isOwn,
+  rating: cfUser.rating,
+  maxRating: cfUser.maxRating,
+  rank: cfUser.rank,
+  maxRank: cfUser.maxRank,
+  avatar: cfUser.avatar,
+});
     }
     return res.status(200).json({
       success: true,
