@@ -1,11 +1,11 @@
 import { useState } from "react";
-import CompareStatsCards from "../components/CompareStatsCards";
-import Navbar from "../components/Navbar";
-import CompareHandleSelector from "../components/CompareHandleSelector";
-import ComparePerformanceChart from "../components/ComparePerformanceChart";
-import CompareTagChart from "../components/CompareTagChart";
-import CompareWinnerCards from "../components/CompareWinnerCards";
-import CompareRatingDistributionChart from "../components/CompareRatingDistributionChart";
+import CompareStatsCards from "../components/compare/CompareStatsCards";
+import Navbar from "../components/common/Navbar";
+import CompareHandleSelector from "../components/compare/CompareHandleSelector";
+import ComparePerformanceChart from "../components/compare/ComparePerformanceChart";
+import CompareTagChart from "../components/compare/CompareTagChart";
+import CompareWinnerCards from "../components/compare/CompareWinnerCards";
+import CompareRatingDistributionChart from "../components/compare/CompareRatingDistributionChart";
 function Compare() {
   const [comparisonData, setComparisonData] = useState([]);
 

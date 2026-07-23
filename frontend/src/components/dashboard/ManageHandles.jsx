@@ -1,7 +1,7 @@
 import { useState } from "react";
-
 import HandleCard from "./HandleCard";
-import AddHandleModal from "./AddHandleModal";
+import AddHandleModal from "../modals/AddHandleModal";
+
 
 function ManageHandles({
   handles,

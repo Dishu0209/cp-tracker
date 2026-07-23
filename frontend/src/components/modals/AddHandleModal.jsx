@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addHandle } from "../services/handleService";
+import { addHandle } from "../../services/handleService";
 import { toast } from "react-hot-toast";
 function AddHandleModal({
   open,

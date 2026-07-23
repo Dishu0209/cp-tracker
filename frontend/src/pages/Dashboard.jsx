@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 
-import Navbar from "../components/Navbar";
-import WelcomeBanner from "../components/WelcomeBanner";
-import HandleSelector from "../components/HandleSelector";
-import StatCard from "../components/StatCard";
-import ProfileCard from "../components/ProfileCard";
-import RatingChart from "../components/RatingChart";
-import RatingDistributionChart from "../components/RatingDistributionChart";
-import TagDistribution from "../components/TagDistribution";
-import RecentActivity from "../components/RecentActivity";
-import DashboardSkeleton from "../components/DashboardSkeleton";
-import ManageHandles from "../components/ManageHandles";
+import Navbar from "../components/common/Navbar";
+import WelcomeBanner from "../components/dashboard/WelcomeBanner";
+import HandleSelector from "../components/dashboard/HandleSelector";
+import StatCard from "../components/dashboard/StatCard";
+
+import ProfileCard from "../components/dashboard/ProfileCard";
+import RatingChart from "../components/dashboard/RatingChart";
+import RatingDistributionChart from "../components/dashboard/RatingDistributionChart";
+import TagDistribution from "../components/dashboard/TagDistribution";
+import RecentActivity from "../components/dashboard/RecentActivity";
+import DashboardSkeleton from "../components/common/DashboardSkeleton";
+import ManageHandles from "../components/dashboard/ManageHandles";
 import { getMe } from "../services/authService";
 import {
   getDashboard,

@@ -1,3 +1,5 @@
+import HandleCard from "./HandleCard";
+
 function HandleSelector({
   handles,
   selectedHandle,

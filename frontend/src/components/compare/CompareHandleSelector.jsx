@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   getDashboard,
   compareHandles,
-} from "../services/dashboardService";
+} from "../../services/dashboardService";
 
 function CompareHandleSelector({ onCompare }) {
   const [handles, setHandles] = useState([]);

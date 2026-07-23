@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { deleteHandle, markOwnHandle } from "../services/handleService";
+
+import { deleteHandle,markOwnHandle } from "../../services/handleService";
 import { toast } from "react-hot-toast";
-import DeleteConfirmModal from "./DeleteConfirmModal";
+import DeleteConfirmModal from "../modals/DeleteConfirmModal";
 function HandleCard({
   handle,
   selectedHandle,

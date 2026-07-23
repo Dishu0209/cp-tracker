@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import DashboardDetails from "./pages/DashboardDetails";
 import Compare from "./pages/Compare";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 
 function App() {
