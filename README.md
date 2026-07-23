@@ -10,7 +10,7 @@ A modern full-stack MERN application to **track, analyze, and compare Codeforces
 **https://cp-tracker-blush.vercel.app**
 
 ### 🔗 Backend API
-**https://cp-tracker-2bfz.onrender.com**
+**https://cp-tracker-2bfz.onrender.com/api**
 
 ---
 
