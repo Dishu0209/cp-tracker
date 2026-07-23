@@ -96,20 +96,33 @@ A modern full-stack MERN application to **track, analyze, and compare Codeforces
 
 ## Dashboard
 
-<img width="1900" height="5251" alt="cp-tracker-blush vercel app_dashboard" src="https://github.com/user-attachments/assets/fdfefa90-19d5-4a28-990e-315e8911cc51" />
+<img width="1905" height="890" alt="image" src="https://github.com/user-attachments/assets/95d7815d-999c-4adb-bdd1-3442a81eb25f" />
+<img width="1892" height="906" alt="image" src="https://github.com/user-attachments/assets/44ec5734-fcf2-42a0-a2d7-94d02e9f4945" />
+<img width="1913" height="903" alt="image" src="https://github.com/user-attachments/assets/7d38e587-91f6-45f0-abd2-39f574655df0" />
+<img width="1917" height="902" alt="image" src="https://github.com/user-attachments/assets/c70a542f-7c32-47a8-a8cd-a93247ea911c" />
+<img width="1912" height="905" alt="image" src="https://github.com/user-attachments/assets/295be4c0-3e6d-4ad6-9ccc-b0ca89b1719e" />
+<img width="1912" height="916" alt="image" src="https://github.com/user-attachments/assets/31cddc8c-ca10-4f97-913f-cfd20b67e657" />
+
 
 
 ---
 
 ## Compare Page
+<img width="1893" height="895" alt="image" src="https://github.com/user-attachments/assets/70350e54-10af-46f5-9472-372cfaa1a2fc" />
 
-> *(Add Compare Screenshot Here)*
 
 ---
 
 ## Analytics
 
-> *(Add Analytics Screenshot Here)*
+<img width="1917" height="896" alt="image" src="https://github.com/user-attachments/assets/8290ce02-0dad-439e-acb9-b6a10d1027b4" />
+<img width="1917" height="915" alt="image" src="https://github.com/user-attachments/assets/16cd30af-5fe1-4603-913c-be24c299fdb6" />
+<img width="1918" height="901" alt="image" src="https://github.com/user-attachments/assets/62041e3b-2593-4e3f-8551-73bd92cbb171" />
+<img width="1918" height="860" alt="image" src="https://github.com/user-attachments/assets/6e567df1-9b40-4034-b58d-46dab7092bd7" />
+<img width="1762" height="813" alt="image" src="https://github.com/user-attachments/assets/0c204885-c650-4b4b-b276-0a07b84bd339" />
+<img width="1866" height="890" alt="image" src="https://github.com/user-attachments/assets/df516633-fff1-400b-aa69-f83583cf8cb5" />
+<img width="1891" height="888" alt="image" src="https://github.com/user-attachments/assets/9bbc6af9-ae4f-4489-a114-54be0549b0bb" />
+
 
 ---
 
