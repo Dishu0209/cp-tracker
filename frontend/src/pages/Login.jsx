@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { loginUser } from "../services/authService";
 
 function Login() {
+ 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,9 +28,7 @@ function Login() {
     } catch (error) {
       console.log(error);
 
-      toast.error(
-        error.response?.data?.message || "Login Failed"
-      );
+      toast.error(error.response?.data?.message || "Login Failed");
     } finally {
       setLoading(false);
     }

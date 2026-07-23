@@ -5,18 +5,19 @@ import Dashboard from "./pages/Dashboard";
 import DashboardDetails from "./pages/DashboardDetails";
 import Compare from "./pages/Compare";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 function App() {
   return (
     <BrowserRouter>
 <Routes>
-  <Route path="/" element={<Navigate to="/login" replace />} />
+  <Route path="/" element={localStorage.getItem("token")?<Navigate to="/dashboard" replace />:<Navigate to="/login" replace />} />
   <Route path="/login" element={<Login/>}/>
   <Route path="/signup" element={<Signup/>}/>
-  <Route path="/dashboard" element={<Dashboard/>}/>
-  <Route path="/dashboard/:handle" element={<DashboardDetails/>}/>
-  <Route path="/compare" element={<Compare/>}/>
+  <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
+  <Route path="/dashboard/:handle" element={<ProtectedRoute><DashboardDetails/></ProtectedRoute>}/>
+  <Route path="/compare" element={<ProtectedRoute><Compare/></ProtectedRoute>}/>
   <Route path="*" element={<NotFound/>}/>
 
 </Routes>
