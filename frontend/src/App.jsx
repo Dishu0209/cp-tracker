@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route ,Navigate} from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import DashboardDetails from "./pages/DashboardDetails";
+// import DashboardDetails from "./pages/DashboardDetails";
 import Compare from "./pages/Compare";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -16,7 +16,7 @@ function App() {
   <Route path="/login" element={<Login/>}/>
   <Route path="/signup" element={<Signup/>}/>
   <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
-  <Route path="/dashboard/:handle" element={<ProtectedRoute><DashboardDetails/></ProtectedRoute>}/>
+  {/* <Route path="/dashboard/:handle" element={<ProtectedRoute><DashboardDetails/></ProtectedRoute>}/> */}
   <Route path="/compare" element={<ProtectedRoute><Compare/></ProtectedRoute>}/>
   <Route path="*" element={<NotFound/>}/>
 
