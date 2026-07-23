@@ -89,7 +89,8 @@ A modern full-stack MERN application to **track, analyze, and compare Codeforces
 
 ## Login
 
-> *(Add Login Screenshot Here)*
+<img width="1918" height="900" alt="image" src="https://github.com/user-attachments/assets/cf709479-c360-41b9-953f-c2a37ceb3f0d" />
+
 
 ---
 
