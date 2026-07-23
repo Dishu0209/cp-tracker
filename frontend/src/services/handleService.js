@@ -1,11 +1,9 @@
 import API from "./api";
-
 const getConfig = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
-
 export const getHandles = async () => {
   const response = await API.get(
     "/users/me/codeforces-handles",

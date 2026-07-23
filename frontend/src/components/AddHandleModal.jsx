@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { addHandle } from "../services/handleService";
-
+import { toast } from "react-hot-toast";
 function AddHandleModal({
   open,
   onClose,
@@ -18,17 +18,16 @@ function AddHandleModal({
     e.preventDefault();
 
     if (!handle.trim()) {
-      alert("Please enter a Codeforces handle.");
+      toast.error("Please enter a Codeforces handle.");
       return;
     }
 
     const alreadyExists = handles.some(
-      (item) =>
-        item.handle.toLowerCase() === handle.trim().toLowerCase()
+      (item) => item.handle.toLowerCase() === handle.trim().toLowerCase(),
     );
 
     if (alreadyExists) {
-      alert("Handle already exists.");
+      toast.error("Handle already exists.");
       return;
     }
 
@@ -36,7 +35,8 @@ function AddHandleModal({
       setLoading(true);
 
       await addHandle(handle.trim(), isOwn);
-
+      await refreshDashboard();
+      toast.success("Handle added successfully!");
       setHandle("");
       setIsOwn(true);
 
@@ -44,10 +44,7 @@ function AddHandleModal({
 
       await refreshDashboard();
     } catch (error) {
-      alert(
-        error?.response?.data?.message ||
-          "Unable to add handle."
-      );
+      toast.error(error?.response?.data?.message || "Unable to add handle.");
     } finally {
       setLoading(false);
     }
@@ -55,14 +52,11 @@ function AddHandleModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-5">
-
       <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-slate-700 bg-gradient-to-br from-slate-900 to-slate-950 shadow-2xl">
-
         {/* Glow */}
         <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl"></div>
 
         <div className="relative z-10 p-8">
-
           <button
             onClick={onClose}
             className="absolute right-6 top-6 text-xl text-slate-400 transition hover:text-white"
@@ -75,15 +69,12 @@ function AddHandleModal({
           </h2>
 
           <p className="mt-2 text-slate-400">
-            Save another Codeforces account to your dashboard for tracking and comparison.
+            Save another Codeforces account to your dashboard for tracking and
+            comparison.
           </p>
 
-          <form
-            onSubmit={submitHandler}
-            className="mt-8 space-y-6"
-          >
+          <form onSubmit={submitHandler} className="mt-8 space-y-6">
             <div>
-
               <label className="mb-2 block text-sm font-semibold uppercase tracking-wider text-slate-300">
                 Handle
               </label>
@@ -96,11 +87,9 @@ function AddHandleModal({
                 autoFocus
                 className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-5 py-4 text-white placeholder:text-slate-500 outline-none transition-all duration-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
               />
-
             </div>
 
             <label className="flex cursor-pointer items-center gap-4 rounded-2xl border border-slate-700 bg-slate-800/40 p-4 transition hover:border-indigo-500">
-
               <input
                 type="checkbox"
                 checked={isOwn}
@@ -109,21 +98,15 @@ function AddHandleModal({
               />
 
               <div>
-
-                <p className="font-semibold text-white">
-                  Mark as Own Handle
-                </p>
+                <p className="font-semibold text-white">Mark as Own Handle</p>
 
                 <p className="text-sm text-slate-400">
                   This handle will be treated as your primary profile.
                 </p>
-
               </div>
-
             </label>
 
             <div className="flex justify-end gap-4 pt-2">
-
               <button
                 type="button"
                 onClick={onClose}
@@ -140,15 +123,10 @@ function AddHandleModal({
               >
                 {loading ? "Adding Handle..." : "Add Handle"}
               </button>
-
             </div>
-
           </form>
-
         </div>
-
       </div>
-
     </div>
   );
 }
