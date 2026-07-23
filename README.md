@@ -96,7 +96,8 @@ A modern full-stack MERN application to **track, analyze, and compare Codeforces
 
 ## Dashboard
 
-> *(Add Dashboard Screenshot Here)*
+<img width="1900" height="5251" alt="cp-tracker-blush vercel app_dashboard" src="https://github.com/user-attachments/assets/fdfefa90-19d5-4a28-990e-315e8911cc51" />
+
 
 ---
 
